@@ -1,0 +1,59 @@
+<!-- 목적: 이벤트 위임을 사용하여 할 일 목록에 추가 및 삭제 버튼 동작 구현하기
+할 일 목록에 할 일을 추가하거나 삭제하는 기능을 구현하세요. id가 "addTodoBtn"인 버튼을 클릭하면,
+사용자가 입력한 할 일이 id가 "todoList"인 ul 요소에 추가되어야 합니다. 각 할 일에는 삭제 버튼이 있어요.
+삭제 버튼을 클릭하면, 해당 목록이 삭제되어야 합니다.
+이벤트 리스너는 ul 요소에 추가되어야 합니다. 이벤트 위임을 사용하여 각 삭제 버튼에 대해 동작이 수행되어야 합니다. -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>할 일 리스트</title>
+
+    <style>
+        .d {
+            border: 1px solid;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <label for="todoInput">할 일: </label>
+        <input type="text" id="todoInput" />
+        <button id="addTodoBtn">추가</button>
+    </div>
+    <ul id="todoList">
+        <li>
+            <span>할 일 1</span>
+            <button>삭제</button>
+        </li>
+        <li>
+            <span>할 일 2</span>
+            <button>삭제</button>
+        </li>
+    </ul>
+
+    <script>
+        document.getElementById("addTodoBtn").addEventListener("click", addTodo);
+        // document.getElementById("todoList").addEventListener("click", deleteTodo);
+
+        function addTodo(e) {
+            const target = e.target;
+            const todoInput = document.getElementById("todoInput");
+            const addTodoBtn = document.getElementById("addTodoBtn");
+
+            if (todoInput.value == "" ) {
+                todoInput.style.border = "1px solid tomato"
+                alert("할 일을 입력해주세요.")
+            }else {
+                todoInput.style.border = ""
+                
+            }
+        }
+    </script>
+</body>
+
+</html>

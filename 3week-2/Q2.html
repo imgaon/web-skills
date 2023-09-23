@@ -1,0 +1,42 @@
+<!-- 목적: 버튼 클릭 시, 특정 요소의 텍스트를 변경하는 기능 구현
+HTML에서 id가 "changeBtn"인 버튼 요소를 클릭하면, id가 "textContainer"인 div 요소의 텍스트가 "Hello, World!"에서 "Hello, JavaScript!"로 변경되어야 합니다.
+changeText 함수를 작성하세요, 이 함수는 이벤트 리스너와 연결되어서 버튼 클릭 시 동작됩니다. -->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>changeText</title>
+</head>
+<body>
+    <div>
+        <button id="changeText">텍스트 변경</button>
+        <button id="selfChangeText">직접 텍스트 변경</button>
+        <div id="textContainer">Hello, World!</div>
+    </div>
+    
+    <script>
+        const changeTextBtn = document.getElementById('changeText');
+        const selfChangeTextBtn = document.getElementById('selfChangeText')
+        const textContainer = document.getElementById('textContainer');
+
+        function changeBtn() {
+            let inputChangeText = prompt('변경하실 텍스트를 입력해주세요.')
+            console.log(inputChangeText)
+            
+            if (inputChangeText !== null && inputChangeText !== "") {
+                textContainer.textContent = inputChangeText;
+            }
+        }
+
+        changeTextBtn.addEventListener("click", (e) => {
+            textContainer.textContent = "Hello, JavaScript!";
+        })
+
+        selfChangeTextBtn.addEventListener("click", (e) => {
+            changeBtn();
+        })
+    </script>
+</body>
+</html>

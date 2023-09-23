@@ -1,0 +1,79 @@
+<!-- 목적: 여러 버튼이 있을 때 각 버튼을 클릭하면 각각의 버튼에 해당하는 내용이 출력되게 만드는 기능 구현
+서로 다른 id를 가진 세 개의 버튼이 있습니다. 각 버튼을 클릭하면, 서로 다른 텍스트가 id가 "displayArea"인 div 요소에 출력되어야 합니다.
+각 버튼에 대해 서로 다른 onClick 핸들러 함수를 작성하세요. -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3 button</title>
+</head>
+<body>
+    <div>
+        <button id="btn1" onclick="onClick1()">버튼 1</button>
+        <button id="btn2" onclick="onClick2()">버튼 2</button>
+        <button id="btn3" onclick="onClick3()">버튼 3</button>
+        <div id="displayArea"></div>
+    </div>
+
+    <script>
+        let displayArea = document.getElementById('displayArea');
+
+        function onClick1() {
+            showTime();
+        }
+
+        function onClick2() {
+            changeBtn();
+        }
+
+    
+        function onClick3() {
+            const randomBgc = randomColor();
+            document.body.style.backgroundColor = randomBgc;
+        }
+
+        function showTime() {
+            const weeks = ["일", "월", "화", "수", "목", "금"]
+            const now = new Date();
+
+            let yy = now.getFullYear();
+            let mm = now.getMonth() + 1;
+            let dd = now.getDate()
+            let w = now.getDay();
+            w = weeks[w];
+            mm = (mm < 10) ? "0" + mm : mm
+            dd = (dd < 10) ? "0" + dd : dd
+
+            let h = now.getHours();
+            let m = now.getMinutes();
+            h = (h <= 12) ? "오후 " + h : "오전 " + h
+
+            let ymd = `${yy}-${mm}-${dd} (${w})`;
+            let time = `${h}:${m}`
+
+            time = `${time} <br> ${ymd}`
+
+            displayArea.innerHTML = time
+        }
+
+        function changeBtn() {
+            let inputChangeText = prompt('변경하실 텍스트를 입력해주세요.')
+            console.log(inputChangeText)
+            
+            if (inputChangeText !== null && inputChangeText !== "") {
+                displayArea.textContent = inputChangeText;
+            }
+        }
+
+        function randomColor() {
+            const r = Math.floor(Math.random() * 256) + 1
+            const g = Math.floor(Math.random() * 256) + 1
+            const b = Math.floor(Math.random() * 256) + 1
+            const randomColor = `rgb(${r}, ${g}, ${b})`
+            return randomColor
+        }
+    </script>
+</body>
+</html>

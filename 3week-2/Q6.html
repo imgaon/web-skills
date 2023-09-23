@@ -1,0 +1,32 @@
+<!-- 목적: 이벤트 위임을 사용하여 여러 버튼 클릭 처리하기
+세 개의 버튼이 각각 다른 색으로 변경되게 하는 기능을 구현하세요. 버튼을 클릭하면,
+각 버튼에 해당하는 색으로 id가 "coloredBox"인 div 요소의 배경색이 변경되어야합니다.
+이벤트 리스너는 여러 버튼의 부모 요소인 div에 추가되어야 합니다. 이벤트 위임을 사용하여 각 버튼에 대해 서로 다른 동작이 수행되어야 합니다. -->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이벤트위임</title>
+</head>
+<body>
+    <div id="buttonContainer">
+        <button data-color="red">Red</button>
+        <button data-color="green">Green</button>
+        <button data-color="blue">Blue</button>
+    </div>
+    <div id="coloredBox" style="width: 200px; height: 100px; background-color: white;"></div>
+
+    <script>
+        document.getElementById("buttonContainer").addEventListener("click", changeColor);
+
+
+
+        function changeColor(e) {
+            const changeColor = e.target.getAttribute('data-color')
+            document.getElementById("coloredBox").style.backgroundColor= changeColor;
+        }
+    </script>
+</body>
+</html>

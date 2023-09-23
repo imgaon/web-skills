@@ -1,0 +1,60 @@
+<!-- // 목적: 버튼 클릭 시, 리스트 아이템을 추가하는 기능 구현
+// HTML에서 id가 "addBtn"인 버튼 요소를 클릭하면 "아이템 (n)"라는 텍스트를 가진 새로운 리스트 아이템을 id가 "itemList"인 ul 요소에 추가하세요.
+// addListItem 함수를 작성하세요, 이 함수는 이벤트 리스너와 연결되어서 버튼 클릭시 동작됩니다. -->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아이템 추가</title>
+</head>
+<body>
+    <div>
+        <button id="addBtn">추가</button>
+        <button id="allDelBtn">전체제거</button>
+
+        
+        <ul id="itemList">
+        </ul>
+    </div>
+    <script>
+        let itemList = document.getElementById('itemList');
+        let addBtn = document.getElementById('addBtn')
+        let delBtn = document.getElementById('delBtn')
+        let allDelBtn = document.getElementById('allDelBtn')
+        let itemCounter = 1;
+
+        function addListItem() {
+        // 코드 작성
+        const newItem = document.createElement("li");
+
+        newItem.textContent = `아이템 ${itemCounter}`;
+        itemCounter++;
+        return newItem;
+        }
+
+        addBtn.addEventListener("click", (e) => {
+            const newItem = addListItem();
+            
+            itemList.appendChild(newItem);
+        });
+
+        allDelBtn.addEventListener("click", (e) => {
+            const delLi = itemList.getElementsByTagName('li')
+
+            if (delLi.length !== 0) {
+                const confirmation = confirm("정말로 전체 아이템을 삭제하시겠습니까?")
+                if (confirmation) {
+                    for (let i = delLi.length - 1; i >= 0; i--) {
+                        itemList.removeChild(delLi[i])
+                    }
+                    itemCounter = 1
+                }
+            }
+        })
+
+    </script>
+    </div>
+</body>
+</html>

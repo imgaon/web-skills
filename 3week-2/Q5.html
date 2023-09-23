@@ -1,0 +1,45 @@
+<!-- 목적: 페이지 로드 시, 현재 시간을 출력하는 기능 구현
+화면에 현재 시간을 출력하는 displayCurrentTime 함수를 작성하세요. 이 함수는 페
+이지 로딩 완료 시 한 번만 실행됩니다. -->
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>현재시간</title>
+</head>
+<body>
+    <div id="timeContainer"></div>
+
+    <script>
+        let timeContainer = document.getElementById('timeContainer')
+
+        window.addEventListener("load", displayCurrentTime);
+
+        function displayCurrentTime() {
+            const weeks = ["일", "월", "화", "수", "목", "금"]
+            const now = new Date();
+
+            let yy = now.getFullYear();
+            let mm = now.getMonth() + 1;
+            let dd = now.getDate()
+            let w = now.getDay();
+            w = weeks[w];
+            mm = (mm < 10) ? "0" + mm : mm
+            dd = (dd < 10) ? "0" + dd : dd
+
+            let h = now.getHours();
+            let m = now.getMinutes();
+            h = (h <= 12) ? "오후 " + h : "오전 " + h
+
+            let ymd = `${yy}-${mm}-${dd} (${w})`;
+            let time = `${h}:${m}`
+
+            time = `${time} <br> ${ymd}`
+
+            timeContainer.innerHTML = time
+        }
+    </script>
+</body>
+</html>
