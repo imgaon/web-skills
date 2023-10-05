@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스톱워치</title>
+
+    <style>
+        * { color: aliceblue; background-color: #111; }
+        html,body { margin: 0; padding: 0; width: 100%; height: 100%; }
+
+        .wrap {
+            position: absolute;
+            text-align: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .timer { font-size: 90px; margin-bottom: 10px; }
+        .btn-box {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+        .btn-box > button {
+            width: 100px;
+            height: 30px;
+            border: none;
+            border-radius: 25px;
+        }
+        .btn-box > button:hover { opacity: 0.85;}
+        .startBtn { background-color: #38E54D; color: #333; font-size: 14px; }
+        .stopBtn { background-color: #B70404; color: aliceblue; font-size: 14px; }
+        .restAndRap { background-color: #242424; font-size: 14px; }
+        .rapTimeDisplay { margin-top: 20px; }
+        .rapTimeDisplay > div {
+            margin-top: 3px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div id="timer" class="timer">00:00:00</div>
+        <div class="btn-box">
+            <button id="startAndStop" class="startBtn">시작</button>
+            <button id="restAndRap" class="restAndRap">재설정</button>
+        </div>
+        <div id="rapTimeDisplay" class="rapTimeDisplay"></div>
+    </div>
+
+
+    <script>
+        const timer = document.getElementById('timer');
+        const startAndStopBtn = document.getElementById('startAndStop');
+        const resetAndRapBtn = document.getElementById('restAndRap');
+        const rapTimeDisplay = document.getElementById("rapTimeDisplay")
+
+        let startTime = 0;
+        let rapTime = 0;
+        let running = false;
+        let interval;
+        let rapLength = 1;
+
+        function startAndStop() {
+            if (! running) {
+                running = true;
+                startAndStopBtn.className = "stopBtn";
+                startAndStopBtn.textContent = "중지";
+                resetAndRapBtn.textContent = "랩";
+                startTime = Date.now() - startTime;
+                rapTime = Date.now() - rapTime
+                interval = setInterval(startStopwatch, 10)
+
+                
+            }else {
+                running = false;
+                startAndStopBtn.className = "startBtn";
+                startAndStopBtn.textContent = "시작";
+                resetAndRapBtn.textContent = "재설정";
+                startTime = Date.now() - startTime;
+                rapTime = Date.now() - rapTime
+                clearInterval(interval);
+            }
+        }
+
+        function resetAndRap() {
+            if (! running) {
+                startTime = 0
+                timer.textContent = "00:00:00"
+                const rap = document.querySelectorAll(".rap")
+                rap.forEach((rap) => {
+                    rap.parentNode.removeChild(rap);
+                });
+
+            }else {
+                const timeNow = Date.now() - startTime
+                const rapTimeTimer = Date.now() - rapTime
+                rapTime = Date.now()
+
+                const minutes = Math.floor((timeNow % 3600000) / 60000);
+                const seconds = Math.floor((timeNow % 60000) / 1000);
+                const milliseconds = Math.floor(timeNow % 1000);
+                const m = String(minutes).padStart(2, "0");
+                const s = String(seconds).padStart(2, "0");
+                const mm = String(milliseconds).padStart(3, "0").slice(0, 2);
+
+                const minutes2 = Math.floor((rapTimeTimer % 3600000) / 60000);
+                const seconds2 = Math.floor((rapTimeTimer % 60000) / 1000);
+                const milliseconds2 = Math.floor(rapTimeTimer % 1000);
+                const m2 = String(minutes2).padStart(2, "0");
+                const s2 = String(seconds2).padStart(2, "0");
+                const mm2 = String(milliseconds2).padStart(3, "0").slice(0, 2);
+
+                const rapItemWrap = document.createElement('div')
+                rapItemWrap.className = "rap";
+                const rapItem = document.createElement('span')
+                const rapItem2 = document.createElement('span')
+                rapItem.textContent = `${m}:${s}:${mm}`
+                rapItem2.textContent = `${m2}:${s2}:${mm2}`
+
+                rapTimeDisplay.appendChild(rapItemWrap);
+                rapItemWrap.appendChild(rapItem);
+                rapItemWrap.appendChild(rapItem2);
+                
+            }
+        }
+
+        function startStopwatch() {
+            const currentTime = Date.now() - startTime
+
+            const minutes = Math.floor((currentTime % 3600000) / 60000);
+            const seconds = Math.floor((currentTime % 60000) / 1000);
+            const milliseconds = Math.floor(currentTime % 1000);
+            // console.log(currentTime, minutes, seconds, milliseconds)
+            
+            const m = String(minutes).padStart(2, "0");
+            const s = String(seconds).padStart(2, "0");
+            const mm = String(milliseconds).padStart(3, "0").slice(0, 2);
+
+
+            timer.textContent = `${m}:${s}:${mm}`
+        }
+
+        startAndStopBtn.addEventListener("click", startAndStop);
+        resetAndRapBtn.addEventListener("click", resetAndRap);
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>타이머</title>
+    <style>
+        .none {
+            display: none;
+        }
+
+
+        .timer-wrap {
+            display: flex;
+            gap: 20px;
+        }
+        .sample {
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            background-color: brown;
+            text-align: center;
+            line-height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div id="timer-wrap" class="timer-wrap">
+        <div id="three" class="three sample" onclick="sampleTimer(event, 180000)">3:00</div>
+        <div id="five" class="five sample" onclick="sampleTimer(event, 300000)">5:00</div>
+        <div id="ten" class="ten sample" onclick="sampleTimer(event, 600000)">10:00</div>
+        <div id="fifteen" class="fifteen sample" onclick="sampleTimer(event, 900000)">15:00</div>
+    </div>
+
+    <div id="display" class="dispaly"></div>
+    <button id="startAndStop" class="stop none">중단</button>
+    <button id="resetBtn" class="reset none">재설정</button>
+
+    <script>
+        const timerBtn = document.getElementById("timer-wrap")
+        const threeTimer = document.getElementById("three")
+        const fiveTimer = document.getElementById("five")
+        const tenTimer = document.getElementById("ten")
+        const fifteenTimer = document.getElementById("fifteen")
+
+        const timerdisplay = document.getElementById("display")
+        const startAndStopBtn = document.getElementById("startAndStop")
+        const resetBtn = document.getElementById("resetBtn")
+
+        let startTime = 0;
+        let running = false;
+        let interval
+        let setTime = 0;
+
+        startAndStopBtn.addEventListener("click", startAndStop)
+        resetBtn.addEventListener("click", reset)
+
+        function sampleTimer(e, time) {
+            timerdisplay.textContent = e.target.textContent;
+            startAndStopBtn.classList.remove("none");
+            resetBtn.classList.remove("none");
+            timerBtn.classList.remove("timer-wrap");
+            timerBtn.classList.add("none");
+            startAndStopBtn.textContent = "중단";
+            startAndStopBtn.classList.add("stop");
+            startAndStopBtn.classList.remove("start");
+
+
+            startTime = 0;
+            running = true;
+            setTime = time;
+            startTime = Date.now();
+            interval = setInterval(startTimer, 10)
+        };
+
+        function startAndStop() {
+            if (! running) {
+                running = true;
+                startAndStopBtn.textContent = "중단";
+                startAndStopBtn.classList.add("stop");
+                startAndStopBtn.classList.remove("start");
+                timerBtn.classList.remove("timer-wrap");
+                timerBtn.classList.add("none");
+
+                startTime = Date.now() - startTime
+                interval = setInterval(startTimer, 10);
+            }else {
+                running = false;
+                startAndStopBtn.textContent = "시작";
+                startAndStopBtn.classList.add("start");
+                startAndStopBtn.classList.remove("stop");
+            
+                startTime = Date.now() - startTime
+                clearInterval(interval)
+            }
+        }
+
+        function reset() {
+            const minutes = Math.floor((setTime % 3600000) / 60000);
+            const seconds = Math.floor((setTime % 60000) / 1000);
+            const m = String(minutes).padStart(2, "0");
+            const s = String(seconds).padStart(2, "0");
+
+            running = false;
+            startTime = 0;
+            startAndStopBtn.textContent = "시작";
+            startAndStopBtn.classList.add("start");
+            startAndStopBtn.classList.remove("stop");
+            timerBtn.classList.add("timer-wrap");
+            timerBtn.classList.remove("none");
+             
+            clearInterval(interval)
+            timerdisplay.textContent = `${m}:${s}`
+        }
+
+        function startTimer() {
+            const currentTime = Date.now() - startTime;
+            const timer = setTime - currentTime;
+
+            const minutes = Math.floor((timer % 3600000) / 60000);
+            const seconds = Math.floor((timer % 60000) / 1000);
+            const m = String(minutes).padStart(2, "0");
+            const s = String(seconds).padStart(2, "0");
+
+            timerdisplay.textContent = `${m}:${s}`
+            if (minutes === 0 && seconds == 0) {
+                clearInterval(interval)
+                alert("시간이 종료 되었습니다.")
+            }
+        }
+
+
+    </script>
+    
+</body>
+</html>
