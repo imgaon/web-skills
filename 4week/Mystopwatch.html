@@ -70,7 +70,7 @@
                 startAndStopBtn.className = "stopBtn";
                 startAndStopBtn.textContent = "중지";
                 resetAndRapBtn.textContent = "랩";
-                startTime = Date.now() - startTime;
+                startTime = Date.now() - startTime; //10
                 rapTime = Date.now() - rapTime
                 interval = setInterval(startStopwatch, 10)
 
@@ -129,12 +129,12 @@
         }
 
         function startStopwatch() {
-            const currentTime = Date.now() - startTime
+            const currentTime = Date.now() - startTime //
 
             const minutes = Math.floor((currentTime % 3600000) / 60000);
             const seconds = Math.floor((currentTime % 60000) / 1000);
             const milliseconds = Math.floor(currentTime % 1000);
-            // console.log(currentTime, minutes, seconds, milliseconds)
+            console.log(Date.now(), startTime, currentTime)
             
             const m = String(minutes).padStart(2, "0");
             const s = String(seconds).padStart(2, "0");

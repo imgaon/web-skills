@@ -5,53 +5,136 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>타이머</title>
     <style>
-        .none {
-            display: none;
+        * { color: aliceblue; background-color: #111; box-sizing: border-box; }
+        html,body { margin: 0; padding: 0; width: 100%; height: 100%; }
+        .none { display: none; }
+
+        .wrap {
+            position: absolute;
+            text-align: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
-
-
         .timer-wrap {
             display: flex;
-            gap: 20px;
+            gap: 30px;
+            justify-content: center;
         }
         .sample {
-            width: 50px;
-            height: 50px;
-            border-radius: 25px;
-            background-color: brown;
+            width: 100px;
+            height: 100px;
+            border-radius: 150px;
+            border: aliceblue 3px dashed;
             text-align: center;
-            line-height: 50px;
+            line-height: 95px;
+            font-size: 22px;
         }
+        .display {
+            font-size: 90px;
+            margin-bottom: 10px;
+        }
+        .btn-box {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+        .btn-box > button {
+            width: 100px;
+            height: 30px;
+            border: none;
+            border-radius: 25px;
+        }
+        .btn-box > button:hover { opacity: 0.85;}
+        .start { background-color: #38E54D; color: #333; font-size: 14px; }
+        .stop { background-color: #B70404; color: aliceblue; font-size: 14px; }
+        .reset { background-color: #242424; font-size: 14px; }
+        .line {
+            width: 400px;
+            height: 2px;
+            background-color: aliceblue;
+            margin: 50px 0;
+        }
+        input[type=number] {
+            width: 50px;
+            height: 60px;
+            background-color: #333;
+            border: none;
+            font-size: 22px;
+            border-radius: 5px;
+            padding: 12px;
+        }
+        input:focus { outline: none; }
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+        span { font-size: 25px; }
+        .inputBtn {
+            width: 60px;
+            height: 30px;
+            margin-left: 20px;
+            border: none;
+            background-color: #444444;
+            font-size: 14px;
+            border-radius: 5px;
+        }
+        .inputBtn:hover { background-color: #333; }
     </style>
 </head>
 <body>
-    <div id="timer-wrap" class="timer-wrap">
-        <div id="three" class="three sample" onclick="sampleTimer(event, 180000)">3:00</div>
-        <div id="five" class="five sample" onclick="sampleTimer(event, 300000)">5:00</div>
-        <div id="ten" class="ten sample" onclick="sampleTimer(event, 600000)">10:00</div>
-        <div id="fifteen" class="fifteen sample" onclick="sampleTimer(event, 900000)">15:00</div>
+    <div class="wrap">
+        <!-- 입력 필드와 버튼 -->
+        <div id="input-wrap">
+            <input id="minutesInput" type="number" oninput="cutLength(this, 2)">
+            <span> : </span>
+            <input id="secondsInput" type="number" oninput="cutLength(this, 2)">
+            <input id="inputBtn" class="inputBtn" type="button" value="확인">
+            <div class="line"></div>
+        </div>
+
+        <!-- 타이머 시작 버튼과 샘플 버튼 -->
+        <div id="timer-wrap" class="timer-wrap">
+            <div id="three" class="three sample" onclick="sampleTimer(event, 180000)">3:00</div>
+            <div id="five" class="five sample" onclick="sampleTimer(event, 300000)">5:00</div>
+            <div id="ten" class="ten sample" onclick="sampleTimer(event, 600000)">10:00</div>
+        </div>
+
+        <div class="line"></div>
+
+        <!-- 타이머 디스플레이와 버튼 -->
+        <div id="display-wrap">
+            <div id="display" class="display"></div>
+            <div class="btn-box">
+                <button id="startAndStop" class="stop none">중단</button>
+                <button id="resetBtn" class="reset none">재설정</button>
+            </div>
+        </div>
     </div>
 
-    <div id="display" class="dispaly"></div>
-    <button id="startAndStop" class="stop none">중단</button>
-    <button id="resetBtn" class="reset none">재설정</button>
-
     <script>
+        const minutesInput = document.getElementById("minutesInput")
+        const secondsInput = document.getElementById("secondsInput")
+        const inputBtn = document.getElementById("inputBtn")
+        const inputWrap = document.getElementById("input-wrap")
+
         const timerBtn = document.getElementById("timer-wrap")
         const threeTimer = document.getElementById("three")
         const fiveTimer = document.getElementById("five")
         const tenTimer = document.getElementById("ten")
         const fifteenTimer = document.getElementById("fifteen")
 
+        const displayWrap = document.getElementById("display-wrap")
         const timerdisplay = document.getElementById("display")
         const startAndStopBtn = document.getElementById("startAndStop")
         const resetBtn = document.getElementById("resetBtn")
 
         let startTime = 0;
+        let clearReady = false;
         let running = false;
         let interval
         let setTime = 0;
 
+        inputBtn.addEventListener("click", inputTimer)
         startAndStopBtn.addEventListener("click", startAndStop)
         resetBtn.addEventListener("click", reset)
 
@@ -61,12 +144,16 @@
             resetBtn.classList.remove("none");
             timerBtn.classList.remove("timer-wrap");
             timerBtn.classList.add("none");
+            inputWrap.classList.add("none")
             startAndStopBtn.textContent = "중단";
+            resetBtn.textContent = "재설정"
             startAndStopBtn.classList.add("stop");
             startAndStopBtn.classList.remove("start");
+            displayWrap.classList.remove("none")
 
 
             startTime = 0;
+            clearReady = false;
             running = true;
             setTime = time;
             startTime = Date.now();
@@ -76,11 +163,12 @@
         function startAndStop() {
             if (! running) {
                 running = true;
+                clearReady = false;
                 startAndStopBtn.textContent = "중단";
+                resetBtn.textContent = "재설정"
                 startAndStopBtn.classList.add("stop");
                 startAndStopBtn.classList.remove("start");
-                timerBtn.classList.remove("timer-wrap");
-                timerBtn.classList.add("none");
+
 
                 startTime = Date.now() - startTime
                 interval = setInterval(startTimer, 10);
@@ -96,40 +184,92 @@
         }
 
         function reset() {
-            const minutes = Math.floor((setTime % 3600000) / 60000);
-            const seconds = Math.floor((setTime % 60000) / 1000);
-            const m = String(minutes).padStart(2, "0");
-            const s = String(seconds).padStart(2, "0");
+            if (! clearReady) {
+                const [m, s] = formatTime(setTime)
 
-            running = false;
-            startTime = 0;
-            startAndStopBtn.textContent = "시작";
-            startAndStopBtn.classList.add("start");
-            startAndStopBtn.classList.remove("stop");
-            timerBtn.classList.add("timer-wrap");
-            timerBtn.classList.remove("none");
-             
-            clearInterval(interval)
-            timerdisplay.textContent = `${m}:${s}`
+                clearReady = true;
+                running = false;
+                startTime = 0;
+                startAndStopBtn.textContent = "시작";
+                startAndStopBtn.classList.add("start");
+                startAndStopBtn.classList.remove("stop");
+                inputWrap.classList.toggle("none")
+                timerBtn.classList.add("timer-wrap");
+                timerBtn.classList.remove("none");
+                resetBtn.textContent = "초기화"
+
+
+                
+                clearInterval(interval)
+                timerdisplay.textContent = `${m}:${s}`
+            }else {
+                clearReady = false;
+                displayWrap.classList.add("none")
+                startAndStopBtn.classList.remove("none")
+            }
         }
 
         function startTimer() {
             const currentTime = Date.now() - startTime;
             const timer = setTime - currentTime;
 
-            const minutes = Math.floor((timer % 3600000) / 60000);
-            const seconds = Math.floor((timer % 60000) / 1000);
-            const m = String(minutes).padStart(2, "0");
-            const s = String(seconds).padStart(2, "0");
+            const [m, s] = formatTime(timer)
 
             timerdisplay.textContent = `${m}:${s}`
-            if (minutes === 0 && seconds == 0) {
+            if (m === "00" && s == "00" || m === "-1" && s == "-1") {
                 clearInterval(interval)
                 alert("시간이 종료 되었습니다.")
+                startAndStopBtn.classList.add("none")
             }
         }
 
+        function cutLength(el, maxlength) {
+            if(el.value.length > maxlength) {
+                el.value = el.value.substr(0, maxlength);
+            }
+        }
 
+        function formatTime(time) {
+            const minutes = Math.floor((time % 3600000) / 60000);
+            const seconds = Math.floor((time % 60000) / 1000);
+            
+            return [
+                String(minutes).padStart(2, "0"),
+                String(seconds).padStart(2, "0")
+            ];
+        }
+
+        function inputTimer() {
+            const Mv = minutesInput.value;
+            const Sv = secondsInput.value;
+            console.log(Mv, Sv)
+            if (Mv <= 60 && Sv <= 60 && Mv !== "" || Sv !== "") {
+                const Mmul = Mv * 60000
+                const [m, s] = formatTime(Mmul)
+                const Smul = Sv * 1000
+                const [m2, s2] = formatTime(Smul)
+
+                timerdisplay.textContent = `${m}:${s}`;
+                startAndStopBtn.classList.remove("none");
+                resetBtn.classList.remove("none");
+                timerBtn.classList.remove("timer-wrap");
+                timerBtn.classList.add("none");
+                inputWrap.classList.toggle("none")
+                startAndStopBtn.textContent = "중단";
+                resetBtn.textContent = "재설정"
+                startAndStopBtn.classList.add("stop");
+                startAndStopBtn.classList.remove("start");
+                displayWrap.classList.remove("none")
+
+
+                setTime = Mmul + Smul
+                startTime = 0;
+                clearReady = false;
+                running = true;
+                startTime = Date.now();
+                interval = setInterval(startTimer, 10)
+            }
+        }
     </script>
     
 </body>
