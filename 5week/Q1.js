@@ -6,6 +6,7 @@ function print() {
     console.time();
     return new Promise((res, rej) => {
         setTimeout(() => {
+            console.log("-----------------------------------------")
             console.log("Hello, World!")
             res()
             console.timeEnd();

@@ -1,21 +1,21 @@
-const user = [
-  {
-    id: "1",
-    name: "John",
-    role: "admin"
-  },
-  {
-    id: "2",
-    name: "Alice",
-    role: "user"
-  }
-];
-
 async function checkId(id) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       // 코드 작성
       // 아이디가 존재하는 아이디인지 확인
+      const user = [
+        {
+          id: "1",
+          name: "John",
+          role: "admin"
+        },
+        {
+          id: "2",
+          name: "Alice",
+          role: "user"
+        }
+      ];
+      
       const foundUser = user.find(user => user.id == id);
       if (foundUser) {
         resolve(foundUser.role);
