@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>getFileMimeType</title>
+</head>
+<body>
+    <script>
+        function getFileMimeType(file) { 
+            return file.type
+        }
+
+        const imageFile = new File([""], "example.jpg", {type: "image/jpeg"});
+        console.log(getFileMimeType(imageFile));
+
+        const textFile = new File(["Hello World"], "example.txt", {type: "text/plain"})
+        console.log(getFileMimeType(textFile))
+    </script>
+</body>
+</html>

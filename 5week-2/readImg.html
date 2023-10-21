@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>imageViewer</title>
+</head>
+<body>
+    <input type="file" accept="image/*" multiple>
+
+    <script>
+        //이미지 선택
+        document.querySelector('input[type=file]').addEventListener('change', (e) => {
+            const files = e.target.files;
+
+            uploadImages(files);
+        })
+
+        //이미지 불러오기 (이미지인지 확인)
+        function matchImage(type) {
+            return type.match("image")
+        }
+
+        function filterImages(file) {
+            return [...file].filter(file => matchImage(file.type))
+        }
+
+        function loadFile(file) {
+            return new Promise((res, rej) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+
+                reader.onload = (e) => {
+                    console.log(e)
+                    res(e.target.result)
+                }
+
+                reader.onerror = (e) => rej(e);
+            })
+        }
+
+        async function loadImage(file) {
+            const imageDataUrl = await loadFile(file);
+
+            return new Promise((res, rej) => {
+                const img = new Image();
+                img.src = imageDataUrl;
+
+                img.onload = (e) => {
+                    console.log(e)
+                    res(img)
+                }
+
+                img.onerror = (e) => rej(e);
+            })
+        }
+        
+        //이미지 업로드
+        async function uploadImages(files) {
+            const imageFiles = filterImages(files);
+            console.log(imageFiles)
+
+            const promises = [];
+
+            for (const file of imageFiles) {
+                try {
+                    const img = loadImage(file)
+                    promises.push(img)
+                } catch (e) {
+                    console.log(e)
+                }
+            }
+
+            console.log(promises)
+
+            const images = await Promise.all(promises);
+
+            for (const image of images) {
+                document.body.appendChild(image)
+            }
+        }
+
+        
+        
+    </script>
+</body>
+</html>

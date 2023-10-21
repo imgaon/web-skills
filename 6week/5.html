@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문제 5번</title>
+</head>
+<body>
+    <canvas id="canvas" width="500" height="500"></canvas>
+
+    <script>
+        function drawMovingLine(ctx, x1, y1, x2, y2) {
+            // 코드 작성
+            let move = 10;
+
+            setInterval(() => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.strokeStyle = "#000"
+                ctx.lineWidth = 2;
+                ctx.closePath();
+                ctx.stroke();
+
+                if (x2 + move > canvas.width) {
+                    move = -move;
+                }
+                if (y2 + move > canvas.height) {
+                    move = - move;
+                }
+
+
+                x1 += move
+                y1 += move
+
+                x2 += move
+                y2 += move
+            }, 100)
+
+            
+
+        }
+
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+
+        drawMovingLine(ctx, 10, 10, 100, 100);
+        // 캔버스에 시작점이 (10, 10)이고 끝점이 (100, 100)인 선을 이동시킵니다.
+    </script>
+</body>
+</html>

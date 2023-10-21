@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>checkFileSize</title>
+</head>
+<body>
+    <script>
+        function checkFileSize(file, maxSize) {
+            const fileSize = file.size;
+            
+            return (fileSize < maxSize) ? true : false
+        }
+
+        const file1 = new File(["Hello World!"], "example.txt", {type: "text/plain"});
+        console.log(checkFileSize(file1, 50));
+
+        const file2 = new File(["This is a very long content"], "example.txt", {type: "text/plain"});
+        console.log(checkFileSize(file2, 10));
+    </script>
+</body>
+</html>

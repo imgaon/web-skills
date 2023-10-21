@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>드래그 엔 드랍</title>
+
+    <style>
+        #drop-box {
+            width: 300px;
+            height: 80px;
+            border: 2px #000 dotted;
+            margin: 0 auto;
+            text-align: center;
+            line-height: 80px;
+            margin-top: 50px;
+        }
+        input[type=file] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="drop-box">
+        여기에 이미지를 넣으세요.
+    </div>
+    <input type="file" multiple accept="image/*">
+
+    <script>
+        const input = document.querySelector("input[type=file]")
+        const dropBox = document.getElementById('drop-box')
+
+
+        // input 이벤트
+        dropBox.addEventListener("click", () => {
+            input.click()
+        })
+        
+        input.addEventListener("change", (e) => {
+            const files = e.target.files;
+
+            loadImageList(files)
+        })
+        
+        // drag drop 이벤트
+        dropBox.addEventListener("drop", (e) => {
+            e.preventDefault()
+            const files = e.dataTransfer.files;
+
+            loadImageList(files)
+            dropBox.style.backgroundColor = "#fff"
+        })
+
+        dropBox.addEventListener("dragover", (e) => {
+            e.preventDefault()
+
+            dropBox.style.backgroundColor = "#3432"
+        })
+
+        dropBox.addEventListener("dragleave", (e) => {
+            
+        })
+
+
+        // 이미지인지 확인
+        const matchImage = (type) => {
+            return type.match("image")
+        }
+
+        const filterImage = (files) => {
+            return [...files].filter(file => matchImage(file.type))
+        }
+
+
+        // 파일 읽어오기
+        function loadFile(file) {
+            return new Promise((res, rej) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+
+                reader.onload = (e) => {
+                    res(e.target.result)
+                }
+
+                reader.onerror = rej;
+            })
+        }
+
+        // 이미지로 변환하기
+        async function loadImage(file) {
+            const imageDataUrl = await loadFile(file);
+
+            return new Promise((res, rej) => {
+                const img = new Image();
+                img.src = imageDataUrl
+
+                img.onload = () => res(img);
+
+                img.onerror = rej;
+            })
+        }
+
+
+        // 이미지 화면에 출력
+        async function loadImageList(files) {
+            const imageFiles = await filterImage(files)
+
+            const promises = [];
+
+            for (const file of imageFiles) {
+                try {
+                    const img = loadImage(file)
+                    promises.push(img)
+                } catch (e) {
+                    console.log(e)
+                }
+            }
+
+            const images = await Promise.all(promises)
+
+            for (const image of images) {
+                document.body.appendChild(image)
+            }
+        }
+    </script>
+</body>
+</html>

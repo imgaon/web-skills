@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        * { margin: 0; }
+        #canvas {
+            border: 1px solid black;
+            background-color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const flakes = [];
+
+        function createFlake() {
+            const x = Math.random() * canvas.width;
+            const y = 0;
+            const radius = Math.random() * 4 + 1;
+            const speed = Math.random() * 3 + 1;
+
+            flakes.push({ x, y, radius, speed });
+        }
+
+        function drawFlakes() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "white";
+
+            for (let i = 0; i < flakes.length; i++) {
+                const flake = flakes[i];
+                ctx.beginPath();
+                ctx.arc(flake.x, flake.y, flake.radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                flake.y += flake.speed;
+
+                if (flake.y > canvas.height) {
+                    flakes.splice(i, 1);
+                    createFlake();
+                }
+            }
+        }
+
+        function animate() {
+            createFlake();
+            drawFlakes();
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+    </script>
+</body>
+
+</html>

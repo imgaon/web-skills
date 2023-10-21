@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문제 1번</title>
+</head>
+<body>
+    <canvas id="canvas" width="1920" height="1080"></canvas>
+
+    <script>
+        const canvas = document.querySelector("#canvas")
+        const ctx = canvas.getContext("2d")
+
+        const random = {
+            randomX: Math.floor(Math.random() * canvas.width) + 1,
+            randomY: Math.floor(Math.random() * canvas.height) + 1,
+            randomRadius: Math.floor(Math.random() * 50) + 1,
+            r: Math.floor(Math.random() * 256),
+            g: Math.floor(Math.random() * 256),
+            b: Math.floor(Math.random() * 256),
+        }
+
+        function drawCircle() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const { randomX, randomY, randomRadius, r, g, b } = random;
+
+            ctx.beginPath()
+            ctx.ellipse(randomX, randomY, randomRadius, randomRadius, 0, 0, Math.PI * 2)
+            ctx.fillStyle = `rgb(${r}, ${g}, ${b})`
+            ctx.fill()
+        }
+
+        drawCircle();
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #canvas {
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas" width="500" height="500"></canvas>
+
+    <script>
+      const canvas = document.querySelector("#canvas");
+      const ctx = canvas.getContext("2d");
+
+      let x = 50; // 초기 위치 x
+      let y = 50; // 초기 위치 y
+      let dx = 2; // x 방향 속도
+      let dy = 2; // y 방향 속도
+      const radius = 10;
+
+      function drawCircle() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = "blue";
+        ctx.fill();
+
+        // 벽면 충돌 감지 및 처리
+        if (x + dx > canvas.width - radius || x + dx < radius) {
+          dx = -dx; // x 방향 바꾸기
+        }
+        if (y + dy > canvas.height - radius || y + dy < radius) {
+          dy = -dy; // y 방향 바꾸기
+        }
+
+        x += dx;
+        y += dy;
+        requestAnimationFrame(drawCircle);
+      }
+
+      drawCircle();
+    </script>
+  </body>
+</html>
